@@ -2,17 +2,17 @@
 
 namespace App\Services;
 
-use App\Mail\WelcomePatientMail;
 use App\Repositories\PatientRepository;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Throwable;
+use App\Services\MailService;
 
 class PatientService
 {
     public function __construct(
         private readonly PatientRepository $patientRepository,
+        private readonly MailService $mailService,
     ) {
     }
 
@@ -35,8 +35,12 @@ class PatientService
             throw $e;
         }
 
-        Mail::to($patient->email)->queue(new WelcomePatientMail($patient));
+        $this->mailService->sendWelcomePatientMail(
+            $patient->email,
+            $patient->name,
+            $patient->last_name,
+        );
+
         // SMS::to($patient->phone)->queue(new WelcomePatientSms($patient)); Proximamente.
     }
 }
-
