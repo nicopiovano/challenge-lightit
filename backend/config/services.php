@@ -33,6 +33,9 @@ return [
         'port'     => env('MAILTRAP_PORT', 2525),
         'username' => env('MAILTRAP_USERNAME'),
         'password' => env('MAILTRAP_PASSWORD'),
+        'api_key' => env('MAILTRAP_API_KEY'),
+        'use_sandbox' => env('MAILTRAP_USE_SANDBOX', true),
+        'inbox_id' => env('MAILTRAP_INBOX_ID'),
     ],
 
     'slack' => [
