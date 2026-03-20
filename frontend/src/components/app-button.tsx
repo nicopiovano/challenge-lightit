@@ -2,13 +2,13 @@ type Props = {
   children: React.ReactNode;
   onClick?: () => void;
   type?: "button" | "submit";
-  variant?: "primary" | "ghost";
+  color?: "primary" | "ghost";
   disabled?: boolean;
   loading?: boolean;
   loadingLabel?: string;
 };
 
-const variants = {
+const colors = {
   primary: "bg-violet-600 text-white hover:bg-violet-700",
   ghost: "text-zinc-300 hover:bg-zinc-800",
 };
@@ -17,7 +17,7 @@ export default function AppButton({
   children,
   onClick,
   type = "button",
-  variant = "ghost",
+  color = "ghost",
   disabled = false,
   loading = false,
   loadingLabel,
@@ -27,7 +27,7 @@ export default function AppButton({
       type={type}
       onClick={onClick}
       disabled={disabled || loading}
-      className={`cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${variants[variant]}`}
+      className={`cursor-pointer rounded-lg px-4 py-2 text-sm font-medium transition-colors disabled:cursor-not-allowed disabled:opacity-50 ${colors[color]}`}
     >
       {loading && loadingLabel ? loadingLabel : children}
     </button>

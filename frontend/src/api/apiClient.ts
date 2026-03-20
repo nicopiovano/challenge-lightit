@@ -2,7 +2,7 @@ import { getApiUrl } from '../types/patient'
 
 const BASE_URL = getApiUrl()
 
-async function request<T>(path: string, init?: RequestInit): Promise<T> {
+async function request(path: string, init?: RequestInit): Promise<unknown> {
   const res = await fetch(`${BASE_URL}${path}`, {
     ...init,
     headers: {
@@ -17,14 +17,14 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
     throw new Error(message)
   }
 
-  return json as T
+  return json
 }
 
 export const apiClient = {
-  get: <T>(path: string) => request<T>(path),
-  post: <T>(path: string, body: FormData | object) => {
+  get: (path: string) => request(path),
+  post: (path: string, body: FormData | object) => {
     const isFormData = body instanceof FormData
-    return request<T>(path, {
+    return request(path, {
       method: 'POST',
       body: isFormData ? body : JSON.stringify(body),
       headers: isFormData ? undefined : { 'Content-Type': 'application/json' },

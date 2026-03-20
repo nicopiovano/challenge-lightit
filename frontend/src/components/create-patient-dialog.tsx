@@ -126,7 +126,7 @@ export default function CreatePatientDialog({ open, onClose, onCreate }: Props) 
               Cancelar
             </AppButton>
             <AppButton
-              variant="primary"
+              color="primary"
               onClick={handleSubmit}
               loading={submitting}
               loadingLabel="Creando..."

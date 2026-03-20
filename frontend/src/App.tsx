@@ -1,11 +1,11 @@
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import PatientCard from "./components/patient-card";
 import CreatePatientDialog from "./components/create-patient-dialog";
 import AppButton from "./components/app-button";
 import { usePatients } from "./hooks/usePatients";
 import { createPatient } from "./services/patientsService";
-import type { CreatePatient } from "./types/patient";
 import { getApiOrigin, getApiUrl, getPhotoUrl } from "./types/patient";
+import type { CreatePatient } from "./types/patient";
 
 type Toast = {
   open: boolean;
@@ -13,15 +13,19 @@ type Toast = {
   message: string;
 };
 
+const apiOrigin = getApiOrigin(getApiUrl());
+
 export default function App() {
-  const apiUrl = useMemo(() => getApiUrl(), []);
-  const apiOrigin = useMemo(() => getApiOrigin(apiUrl), [apiUrl]);
 
   const { patients, loading, error, refresh } = usePatients();
   const [openDialog, setOpenDialog] = useState(false);
-  const [toast, setToast] = useState<Toast>({ open: false, type: "success", message: "" });
+  const [toast, setToast] = useState<Toast>({
+    open: false,
+    type: "success",
+    message: "",
+  });
 
-  const showToast = (type: Toast["type"], message: string) => {
+  const showToast = (type: "success" | "error", message: string) => {
     setToast({ open: true, type, message });
     setTimeout(() => setToast((t) => ({ ...t, open: false })), 5000);
   };
@@ -32,7 +36,10 @@ export default function App() {
       await refresh();
       showToast("success", "Paciente creado correctamente.");
     } catch (e) {
-      showToast("error", e instanceof Error ? e.message : "Error al crear el paciente.");
+      showToast(
+        "error",
+        e instanceof Error ? e.message : "Error al crear el paciente.",
+      );
       throw e;
     }
   };
@@ -40,10 +47,9 @@ export default function App() {
   return (
     <div className="min-h-screen bg-zinc-950 py-8 text-zinc-100">
       <div className="mx-auto w-full max-w-2xl px-4">
-
         <div className="mb-6 flex items-center justify-between">
           <h1 className="text-2xl font-bold text-zinc-100">Pacientes</h1>
-          <AppButton variant="primary" onClick={() => setOpenDialog(true)}>
+          <AppButton color="primary" onClick={() => setOpenDialog(true)}>
             Crear
           </AppButton>
         </div>

@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PatientCreateRequest;
-use Illuminate\Http\JsonResponse;
-use Illuminate\Support\Facades\Log;
 use App\Http\Resources\PatientResource;
 use App\Services\PatientService;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class PatientController extends Controller
