@@ -19,9 +19,9 @@ class PatientFactory extends Factory
         $photoUrl = $seedPhotoRelPath ? Storage::url($seedPhotoRelPath) : '';
 
         return [
-            'name' => 'Nico',
-            'last_name' => 'Piovano',
-            'email' => 'nmpiovano@gmail.com',
+            'name' => 'Cosme',
+            'last_name' => 'Fulanito',
+            'email' => 'fulanito@gmail.com',
             'phone' => fake()->numerify('+54 9 ### ### ####'),
             'photo' => $photoUrl,
         ];

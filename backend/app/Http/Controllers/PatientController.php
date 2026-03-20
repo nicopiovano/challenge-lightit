@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PatientsRequest;
-use App\Http\Resources\PatientResource;
-use App\Services\PatientService;
+use App\Http\Requests\PatientCreateRequest;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Log;
+use App\Http\Resources\PatientResource;
+use App\Services\PatientService;
 use Throwable;
 
 class PatientController extends Controller
@@ -26,7 +26,7 @@ class PatientController extends Controller
         ]);
     }
 
-    public function store(PatientsRequest $request): JsonResponse
+    public function store(PatientCreateRequest $request): JsonResponse
     {
         // try catch necesario, involucra DB y Disco -> mensaje controlado.
         try {
