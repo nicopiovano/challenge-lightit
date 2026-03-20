@@ -13,6 +13,13 @@ async function request(path: string, init?: RequestInit): Promise<unknown> {
   const json = await res.json().catch(() => ({}))
 
   if (!res.ok) {
+    const fieldErrors = json?.errors
+    if (fieldErrors && typeof fieldErrors === 'object') {
+      const first = Object.values(fieldErrors as Record<string, string[]>)[0]
+      if (Array.isArray(first) && first.length > 0) {
+        throw new Error(first[0])
+      }
+    }
     const message = typeof json?.message === 'string' ? json.message : 'Error en la solicitud'
     throw new Error(message)
   }

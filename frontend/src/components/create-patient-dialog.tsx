@@ -72,6 +72,9 @@ export default function CreatePatientDialog({ open, onClose, onCreate }: Props) 
         phone: `+${form.prefix}${normalizePhone(form.phone)}`,
         photoFile,
       });
+      setForm(EMPTY_FORM);
+      setPhotoFile(null);
+      setTouched(new Set());
       onClose();
     } catch {
       // El snackbar del App se encarga del mensaje.
