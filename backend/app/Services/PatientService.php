@@ -32,7 +32,7 @@ class PatientService
         ]);
 
         Mail::to($patient->email)->queue(new WelcomePatientMail($patient));
-        // TODO: future SMS sending (not implemented for this challenge).
+        // SMS::to($patient->phone)->queue(new WelcomePatientSms($patient)); Proximamente.
 
         return $patient;
     }
