@@ -17,7 +17,7 @@ class PatientsRequest extends FormRequest
             'name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'email', 'unique:patients,email'],
-            'phone' => ['required', 'string', 'regex:/^\\+54\\d+$/'],
+            'phone' => ['required', 'string', 'regex:/^\+\d{2,4}\d+$/'],
             'photo' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,gif,svg', 'max:2048'],
         ];
     }

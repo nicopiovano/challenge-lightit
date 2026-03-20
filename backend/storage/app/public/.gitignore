@@ -1,2 +1,4 @@
 *
 !.gitignore
+!patient-photos/
+!patient-photos/**
