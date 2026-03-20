@@ -1,91 +1,75 @@
-import { useMemo, useState } from 'react'
-import { Alert, Box, Button, CircularProgress, Container, Snackbar, Typography } from '@mui/material'
-import PatientCard from './components/patient-card'
-import CreatePatientDialog from './components/create-patient-dialog'
-import { usePatients } from './hooks/usePatients'
-import { createPatient } from './services/patientsService'
-import type { CreatePatient } from './types/patient'
-import { getApiOrigin, getApiUrl, getPhotoUrl } from './types/patient'
+import { useMemo, useState } from "react";
+import PatientCard from "./components/patient-card";
+import CreatePatientDialog from "./components/create-patient-dialog";
+import AppButton from "./components/app-button";
+import { usePatients } from "./hooks/usePatients";
+import { createPatient } from "./services/patientsService";
+import type { CreatePatient } from "./types/patient";
+import { getApiOrigin, getApiUrl, getPhotoUrl } from "./types/patient";
 
-type SnackbarState = {
-  open: boolean
-  severity: 'success' | 'error'
-  message: string
-}
+type Toast = {
+  open: boolean;
+  type: "success" | "error";
+  message: string;
+};
 
 export default function App() {
-  const apiUrl = useMemo(() => getApiUrl(), [])
-  const apiOrigin = useMemo(() => getApiOrigin(apiUrl), [apiUrl])
+  const apiUrl = useMemo(() => getApiUrl(), []);
+  const apiOrigin = useMemo(() => getApiOrigin(apiUrl), [apiUrl]);
 
-  const { patients, loading, error, refresh } = usePatients()
-  const [openDialog, setOpenDialog] = useState(false)
-  const [snackbar, setSnackbar] = useState<SnackbarState>({
-    open: false,
-    severity: 'success',
-    message: '',
-  })
+  const { patients, loading, error, refresh } = usePatients();
+  const [openDialog, setOpenDialog] = useState(false);
+  const [toast, setToast] = useState<Toast>({ open: false, type: "success", message: "" });
+
+  const showToast = (type: Toast["type"], message: string) => {
+    setToast({ open: true, type, message });
+    setTimeout(() => setToast((t) => ({ ...t, open: false })), 5000);
+  };
 
   const handleCreate = async (formData: CreatePatient) => {
     try {
-      await createPatient(formData)
-      await refresh()
-      setSnackbar({
-        open: true,
-        severity: 'success',
-        message: 'Paciente creado correctamente.',
-      })
+      await createPatient(formData);
+      await refresh();
+      showToast("success", "Paciente creado correctamente.");
     } catch (e) {
-      setSnackbar({
-        open: true,
-        severity: 'error',
-        message: e instanceof Error ? e.message : 'Error al crear el paciente.',
-      })
-      throw e
+      showToast("error", e instanceof Error ? e.message : "Error al crear el paciente.");
+      throw e;
     }
-  }
+  };
 
   return (
-    <Box sx={{ minHeight: "100vh", py: 4 }}>
-      <Container maxWidth="md">
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            mb: 3,
-          }}
-        >
-          <Typography variant="h4" fontWeight={700}>
-            Pacientes
-          </Typography>
-          <Button variant="contained" onClick={() => setOpenDialog(true)}>
+    <div className="min-h-screen bg-zinc-950 py-8 text-zinc-100">
+      <div className="mx-auto w-full max-w-2xl px-4">
+
+        <div className="mb-6 flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-zinc-100">Pacientes</h1>
+          <AppButton variant="primary" onClick={() => setOpenDialog(true)}>
             Crear
-          </Button>
-        </Box>
+          </AppButton>
+        </div>
 
         {loading ? (
-          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
-            <CircularProgress />
-          </Box>
+          <div className="flex justify-center py-12">
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-700 border-t-violet-500" />
+          </div>
         ) : error ? (
-          <Alert severity="error">{error}</Alert>
+          <div className="rounded-lg border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-400">
+            {error}
+          </div>
         ) : patients.length === 0 ? (
-          <Typography color="text.secondary">
-            No hay pacientes todavía.
-          </Typography>
+          <p className="text-sm text-zinc-500">No hay pacientes todavía.</p>
         ) : (
-          <Box sx={{ display: "grid", gap: 2 }}>
-            {patients.map((patient) => {
-              const photoUrl = getPhotoUrl(patient.photo, apiOrigin);
-              return (
-                <Box key={patient.id}>
-                  <PatientCard patient={patient} photoUrl={photoUrl} />
-                </Box>
-              );
-            })}
-          </Box>
+          <div className="flex flex-col gap-2">
+            {patients.map((patient) => (
+              <PatientCard
+                key={patient.id}
+                patient={patient}
+                photoUrl={getPhotoUrl(patient.photo, apiOrigin)}
+              />
+            ))}
+          </div>
         )}
-      </Container>
+      </div>
 
       <CreatePatientDialog
         open={openDialog}
@@ -93,20 +77,17 @@ export default function App() {
         onCreate={handleCreate}
       />
 
-      <Snackbar
-        open={snackbar.open}
-        autoHideDuration={5000}
-        onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
-      >
-        <Alert
-          variant="filled"
-          severity={snackbar.severity}
-          sx={{ width: "100%", alignItems: "center" }}
+      {toast.open && (
+        <div
+          className={`fixed bottom-6 left-1/2 -translate-x-1/2 rounded-lg px-5 py-3 text-sm font-medium shadow-lg transition-all ${
+            toast.type === "success"
+              ? "bg-green-600 text-white"
+              : "bg-red-600 text-white"
+          }`}
         >
-          {snackbar.message}
-        </Alert>
-      </Snackbar>
-    </Box>
+          {toast.message}
+        </div>
+      )}
+    </div>
   );
 }

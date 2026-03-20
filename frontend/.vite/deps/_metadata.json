@@ -1,0 +1,66 @@
+{
+  "hash": "202273f6",
+  "configHash": "6105b50d",
+  "lockfileHash": "17fff6bd",
+  "browserHash": "4c4cd25c",
+  "optimized": {
+    "@mui/icons-material/ExpandMore": {
+      "src": "../../node_modules/@mui/icons-material/esm/ExpandMore.js",
+      "file": "@mui_icons-material_ExpandMore.js",
+      "fileHash": "3d408ab3",
+      "needsInterop": false
+    },
+    "@mui/material": {
+      "src": "../../node_modules/@mui/material/esm/index.js",
+      "file": "@mui_material.js",
+      "fileHash": "6bb2854f",
+      "needsInterop": false
+    },
+    "@mui/material/styles": {
+      "src": "../../node_modules/@mui/material/esm/styles/index.js",
+      "file": "@mui_material_styles.js",
+      "fileHash": "176b5bd2",
+      "needsInterop": false
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "9a577f3b",
+      "needsInterop": true
+    },
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "8283e73e",
+      "needsInterop": true
+    },
+    "react/jsx-dev-runtime": {
+      "src": "../../node_modules/react/jsx-dev-runtime.js",
+      "file": "react_jsx-dev-runtime.js",
+      "fileHash": "1f1a545c",
+      "needsInterop": true
+    }
+  },
+  "chunks": {
+    "createSvgIcon-BNGWORuJ": {
+      "file": "createSvgIcon-BNGWORuJ.js",
+      "isDynamicEntry": false
+    },
+    "react-3_O8oni9": {
+      "file": "react-3_O8oni9.js",
+      "isDynamicEntry": false
+    },
+    "react-dom-DKYhWFhx": {
+      "file": "react-dom-DKYhWFhx.js",
+      "isDynamicEntry": false
+    },
+    "styled-CXxAxlhF": {
+      "file": "styled-CXxAxlhF.js",
+      "isDynamicEntry": false
+    },
+    "styles-Tc_XMKYn": {
+      "file": "styles-Tc_XMKYn.js",
+      "isDynamicEntry": false
+    }
+  }
+}
