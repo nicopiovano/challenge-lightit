@@ -7,6 +7,7 @@ use App\Repositories\PatientRepository;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
 
 class PatientService
 {
@@ -23,12 +24,16 @@ class PatientService
     public function createPatient(array $data, UploadedFile $photoFile): void
     {
         $storedPath = $photoFile->store('patient-photos', 'public');
-        $photoPath = Storage::url($storedPath); // /storage/patient-photos/...
 
-        $patient = $this->patientRepository->create([
-            ...$data,
-            'photo' => $photoPath,
-        ]);
+        try {
+            $patient = $this->patientRepository->create([
+                ...$data,
+                'photo' => Storage::url($storedPath),
+            ]);
+        } catch (Throwable $e) {
+            Storage::disk('public')->delete($storedPath);
+            throw $e;
+        }
 
         Mail::to($patient->email)->queue(new WelcomePatientMail($patient));
         // SMS::to($patient->phone)->queue(new WelcomePatientSms($patient)); Proximamente.

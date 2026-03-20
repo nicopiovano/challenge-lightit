@@ -6,6 +6,8 @@ use App\Http\Requests\PatientCreateRequest;
 use App\Http\Resources\PatientResource;
 use App\Services\PatientService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Log;
+use Throwable;
 
 class PatientController extends Controller
 {
@@ -25,13 +27,24 @@ class PatientController extends Controller
 
     public function store(PatientCreateRequest $request): JsonResponse
     {
-        $this->patientService->createPatient(
-            $request->safe()->except('photo'),
-            $request->file('photo'),
-        );
+        try {
+            $this->patientService->createPatient(
+                $request->safe()->except('photo'),
+                $request->file('photo'),
+            );
 
-        return response()->json([
-            'message' => 'Paciente creado correctamente.',
-        ], 201);
+            return response()->json([
+                'message' => 'Paciente creado correctamente.',
+            ], 201);
+        } catch (Throwable $e) {
+            Log::error('Patient store failed', [
+                'exception' => $e::class,
+                'message'   => $e->getMessage(),
+            ]);
+
+            return response()->json([
+                'message' => 'Error al crear el paciente.',
+            ], 500);
+        }
     }
 }
