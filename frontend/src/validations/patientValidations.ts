@@ -21,21 +21,26 @@ const required = (v: string): string | null =>
 const noNumbers = (v: string): string | null =>
   /\d/.test(v) ? 'No puede contener números.' : null
 
+const minMax = (min: number, max: number) => (v: string): string | null =>
+  v.trim().length < min || v.trim().length > max ? `Entre ${min} y ${max} caracteres.` : null
+
 const validEmail = (v: string): string | null =>
   /^\S+@\S+\.\S+$/.test(v.trim()) ? null : 'Debe ser del tipo email@dominio.com'
 
-const validPhone = (v: string): string | null =>
-  /^\d{10}$/.test(normalizePhone(v)) ? null : 'Debe tener exactamente 10 dígitos.'
+const validPhone = (v: string): string | null => {
+  const digits = normalizePhone(v)
+  return digits.length >= 6 && digits.length <= 12 ? null : 'Entre 6 y 12 dígitos.'
+}
 
 const validPrefix = (v: string): string | null =>
   /^\d{2,4}$/.test(v.trim()) ? null : 'Prefijo: 2 a 4 dígitos.'
 
 const fieldRules: Record<keyof FormFields, FieldValidator[]> = {
-  name: [required, noNumbers],
-  last_name: [required, noNumbers],
-  email: [required, validEmail],
-  phone: [required, validPhone],
-  prefix: [required, validPrefix],
+  name:      [required, noNumbers, minMax(3, 15)],
+  last_name: [required, noNumbers, minMax(2, 15)],
+  email:     [required, minMax(5, 25), validEmail],
+  phone:     [required, validPhone],
+  prefix:    [required, validPrefix],
 }
 
 export function validatePatientForm(
@@ -55,6 +60,7 @@ export function validatePatientForm(
   }
 
   if (!photoFile) errors.photo = 'Foto requerida.'
+  else if (photoFile.size > 2 * 1024 * 1024) errors.photo = 'La imagen debe ser menor a 2MB.'
 
   return errors
 }

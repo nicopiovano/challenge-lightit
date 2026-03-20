@@ -16,12 +16,13 @@ type FieldConfig = {
   label: string;
   type?: string;
   required?: boolean;
+  maxLength?: number;
 };
 
 const FIELDS: FieldConfig[] = [
-  { key: "name",      label: "Nombre",   required: true },
-  { key: "last_name", label: "Apellido", required: true },
-  { key: "email",     label: "Email",    type: "email", required: true },
+  { key: "name",      label: "Nombre",   required: true, maxLength: 15 },
+  { key: "last_name", label: "Apellido", required: true, maxLength: 15 },
+  { key: "email",     label: "Email",    type: "email",  required: true, maxLength: 25 },
 ];
 
 type Props = {
@@ -93,7 +94,7 @@ export default function CreatePatientDialog({ open, onClose, onCreate }: Props) 
           </Dialog.Title>
 
           <div className="flex flex-col gap-4">
-            {FIELDS.map(({ key, label, type, required }) => (
+            {FIELDS.map(({ key, label, type, required, maxLength }) => (
               <AppTextInput
                 key={key}
                 label={label}
@@ -101,6 +102,7 @@ export default function CreatePatientDialog({ open, onClose, onCreate }: Props) 
                 value={form[key]}
                 onChange={(e) => handleChange(key, e.target.value)}
                 required={required}
+                maxLength={maxLength}
                 error={visibleErrors[key]}
               />
             ))}

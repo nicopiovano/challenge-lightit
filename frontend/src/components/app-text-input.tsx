@@ -8,6 +8,7 @@ type Props = {
   placeholder?: string;
   onChange: React.ChangeEventHandler<HTMLInputElement>;
   inputMode?: React.HTMLAttributes<HTMLInputElement>["inputMode"];
+  maxLength?: number;
   leftAdornment?: React.ReactNode;
   className?: string;
 };
@@ -22,6 +23,7 @@ export default function AppTextInput({
   fullWidth = true,
   placeholder,
   inputMode,
+  maxLength,
   leftAdornment,
   className = "",
 }: Props) {
@@ -45,6 +47,7 @@ export default function AppTextInput({
           onChange={onChange}
           placeholder={placeholder}
           inputMode={inputMode}
+          maxLength={maxLength}
           className="w-full flex-1 bg-transparent px-3 py-2 text-sm text-zinc-100 outline-none placeholder:text-zinc-600"
         />
       </div>

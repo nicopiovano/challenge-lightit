@@ -14,11 +14,11 @@ class PatientCreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'last_name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'unique:patients,email'],
-            'phone' => ['required', 'string', 'regex:/^\+\d{2,4}\d+$/'],
-            'photo' => ['required', 'file', 'mimes:jpg,jpeg,png,webp,gif,svg', 'max:2048'],
+            'name'      => ['required', 'string', 'min:3',  'max:15'],
+            'last_name' => ['required', 'string', 'min:2',  'max:15'],
+            'email'     => ['required', 'email',  'min:5',  'max:25', 'unique:patients,email'],
+            'phone'     => ['required', 'string', 'regex:/^\+\d{2,4}\d{6,12}$/'],
+            'photo'     => ['required', 'file',   'mimes:jpg,jpeg,png,webp,gif,svg', 'max:2048'],
         ];
     }
 
