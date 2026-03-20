@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//home/nicoubuntu/Porfolio/**)",
+      "Read(//home/nicoubuntu/.claude/**)",
+      "Bash(cp:*)",
+      "Bash(docker compose:*)",
+      "Bash(chmod:*)",
+      "Bash(cat /home/nicoubuntu/Porfolio/challenge-lightit/frontend/src/services/*.ts)",
+      "Bash(cat /home/nicoubuntu/Porfolio/challenge-lightit/frontend/src/services/*.tsx)",
+      "Bash(ls /home/nicoubuntu/Porfolio/challenge-lightit/backend/.env*)",
+      "Bash(cat /home/nicoubuntu/Porfolio/challenge-lightit/frontend/src/hooks/*.ts)",
+      "Bash(curl:*)",
+      "Bash(docker exec:*)"
+    ]
+  }
+}
