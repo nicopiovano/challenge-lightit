@@ -45,9 +45,16 @@ export default function App() {
   }
 
   return (
-    <Box sx={{ minHeight: '100vh', py: 4 }}>
+    <Box sx={{ minHeight: "100vh", py: 4 }}>
       <Container maxWidth="md">
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 3 }}>
+        <Box
+          sx={{
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            mb: 3,
+          }}
+        >
           <Typography variant="h4" fontWeight={700}>
             Pacientes
           </Typography>
@@ -57,22 +64,24 @@ export default function App() {
         </Box>
 
         {loading ? (
-          <Box sx={{ display: 'flex', justifyContent: 'center', py: 4 }}>
+          <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
             <CircularProgress />
           </Box>
         ) : error ? (
           <Alert severity="error">{error}</Alert>
         ) : patients.length === 0 ? (
-          <Typography color="text.secondary">No hay pacientes todavía.</Typography>
+          <Typography color="text.secondary">
+            No hay pacientes todavía.
+          </Typography>
         ) : (
-          <Box sx={{ display: 'grid', gap: 2 }}>
+          <Box sx={{ display: "grid", gap: 2 }}>
             {patients.map((patient) => {
-              const photoUrl = getPhotoUrl(patient.photo, apiOrigin)
+              const photoUrl = getPhotoUrl(patient.photo, apiOrigin);
               return (
                 <Box key={patient.id}>
                   <PatientCard patient={patient} photoUrl={photoUrl} />
                 </Box>
-              )
+              );
             })}
           </Box>
         )}
@@ -88,16 +97,16 @@ export default function App() {
         open={snackbar.open}
         autoHideDuration={5000}
         onClose={() => setSnackbar((s) => ({ ...s, open: false }))}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'center' }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
       >
         <Alert
           variant="filled"
           severity={snackbar.severity}
-          sx={{ width: '100%', alignItems: 'center' }}
+          sx={{ width: "100%", alignItems: "center" }}
         >
           {snackbar.message}
         </Alert>
       </Snackbar>
     </Box>
-  )
+  );
 }
