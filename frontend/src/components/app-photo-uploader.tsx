@@ -1,37 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { Box, CircularProgress, Typography } from "@mui/material";
 
 type Props = {
   file: File | null;
   onChange: (file: File) => void;
   error?: string;
 };
-
-const styles = {
-  dropzone: {
-    border: "1px dashed",
-    borderColor: "divider",
-    borderRadius: 2,
-    p: 2,
-    textAlign: "center",
-    cursor: "pointer",
-    backgroundColor: "rgba(255,255,255,0.02)",
-  },
-  previewWrapper: {
-    mt: 2,
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    minHeight: 160,
-  },
-  previewImg: {
-    width: 160,
-    height: 160,
-    objectFit: "cover",
-    borderRadius: 2,
-  },
-  error: { mt: 1 },
-} as const;
 
 export default function AppPhotoUploader({ file, onChange, error }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -55,8 +28,7 @@ export default function AppPhotoUploader({ file, onChange, error }: Props) {
   };
 
   return (
-    <Box
-      sx={styles.dropzone}
+    <div
       onClick={() => fileInputRef.current?.click()}
       onDragOver={(e) => e.preventDefault()}
       onDrop={(e) => {
@@ -65,40 +37,34 @@ export default function AppPhotoUploader({ file, onChange, error }: Props) {
       }}
       role="button"
       tabIndex={0}
+      className="cursor-pointer rounded-lg border border-dashed border-zinc-700 bg-zinc-900 p-4 text-center transition-colors hover:border-violet-500"
     >
-      <Typography variant="body1" fontWeight={600}>
-        Arrastrar y soltar foto
-      </Typography>
-      <Typography variant="body2" color="text.secondary">
-        o click para seleccionar
-      </Typography>
+      <p className="text-sm font-semibold text-zinc-300">Arrastrar y soltar foto</p>
+      <p className="text-xs text-zinc-500">o click para seleccionar</p>
 
       {previewUrl && (
-        <Box sx={styles.previewWrapper}>
-          {loading && <CircularProgress size={40} />}
-          <Box
-            component="img"
+        <div className="mt-3 flex min-h-40 items-center justify-center">
+          {loading && (
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-600 border-t-violet-500" />
+          )}
+          <img
             src={previewUrl}
-            alt="Vista previa de la foto"
+            alt="Vista previa"
             onLoad={() => setLoading(false)}
-            sx={{ ...styles.previewImg, display: loading ? "none" : "block" }}
+            className={`h-40 w-40 rounded-lg object-cover ${loading ? "hidden" : "block"}`}
           />
-        </Box>
+        </div>
       )}
 
-      {error && (
-        <Typography variant="body2" color="error" sx={styles.error}>
-          {error}
-        </Typography>
-      )}
+      {error && <p className="mt-2 text-xs text-red-400">{error}</p>}
 
       <input
         ref={fileInputRef}
         type="file"
         accept="image/*"
-        style={{ display: "none" }}
+        className="hidden"
         onChange={(e) => handlePick(e.target.files?.[0])}
       />
-    </Box>
+    </div>
   );
 }
