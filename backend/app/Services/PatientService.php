@@ -2,10 +2,11 @@
 
 namespace App\Services;
 
+use App\Mail\WelcomePatientMail;
 use App\Models\Patient;
 use App\Repositories\PatientRepository;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 
 class PatientService
@@ -30,7 +31,7 @@ class PatientService
             'photo' => $photoPath,
         ]);
 
-        Log::info("Fake email: sending patient welcome email to {$patient->email}");
+        Mail::to($patient->email)->queue(new WelcomePatientMail($patient));
         // TODO: future SMS sending (not implemented for this challenge).
 
         return $patient;
