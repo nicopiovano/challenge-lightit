@@ -80,7 +80,7 @@ return [
         ],
 
         'mailtrap' => [
-            'transport' => 'mailtrap',
+            'transport' => 'mailtrap-sdk',
         ],
 
         'failover' => [
