@@ -1,10 +1,6 @@
-export type FormFields = {
-  name: string
-  last_name: string
-  email: string
-  phone: string
-  prefix: string
-}
+import type { FormFields } from '../types/patient'
+
+export type { FormFields }
 
 export const EMPTY_FORM: FormFields = {
   name: '',

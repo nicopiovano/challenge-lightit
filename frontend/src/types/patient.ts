@@ -1,3 +1,12 @@
+// Campos del formulario de creación
+export type FormFields = {
+  name: string
+  last_name: string
+  email: string
+  phone: string
+  prefix: string
+}
+
 //Obj que viene del back
 export type Patient = {
   id: number
