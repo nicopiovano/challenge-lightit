@@ -2,12 +2,13 @@
 
 namespace Database\Seeders;
 
+use App\Models\Patient;
 use Illuminate\Database\Seeder;
 
-class DatabaseSeeder extends Seeder
+class PatientSeeder extends Seeder
 {
     public function run(): void
     {
-        $this->call(PatientSeeder::class);
+        Patient::factory(1)->create();
     }
 }
