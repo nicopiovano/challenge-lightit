@@ -3,6 +3,7 @@
 namespace App\Services;
 
 use Illuminate\Support\Facades\Log;
+use Mailtrap\Config\SmtpConfig;
 use Mailtrap\MailtrapClient;
 use Mailtrap\Mime\MailtrapEmail;
 use Symfony\Component\Mime\Address;
@@ -13,19 +14,24 @@ class MailService
     public function sendWelcomePatientMail(string $email, string $name, string $lastName): void
     {
         try {
+            $config = new SmtpConfig(
+                host: config('services.mailtrap.host'),
+                port: config('services.mailtrap.port'),
+                username: config('services.mailtrap.username'),
+                password: config('services.mailtrap.password'),
+            );
+
             $mail = (new MailtrapEmail())
                 ->from(new Address(config('mail.from.address'), config('mail.from.name')))
                 ->to(new Address($email, "{$name} {$lastName}"))
                 ->subject("Bienvenido/a {$name}")
                 ->html(view('emails.welcome-patient', [
-                    'name'      => $name,
-                    'lastName'  => $lastName,
-                    'email'     => $email,
+                    'name'     => $name,
+                    'lastName' => $lastName,
+                    'email'    => $email,
                 ])->render());
 
-            MailtrapClient::initSendingEmails(
-                apiKey: config('services.mailtrap-sdk.apiKey'),
-            )->send($mail);
+            MailtrapClient::initSmtp($config)->send($mail);
         } catch (Throwable $e) {
             Log::warning('Failed to send welcome email', [
                 'email' => $email,

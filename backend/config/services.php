@@ -28,9 +28,11 @@ return [
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
 
-    'mailtrap-sdk' => [
-        'host'   => env('MAILTRAP_HOST', 'send.api.mailtrap.io'),
-        'apiKey' => env('MAILTRAP_API_KEY'),
+    'mailtrap' => [
+        'host'     => env('MAILTRAP_HOST', 'sandbox.smtp.mailtrap.io'),
+        'port'     => env('MAILTRAP_PORT', 2525),
+        'username' => env('MAILTRAP_USERNAME'),
+        'password' => env('MAILTRAP_PASSWORD'),
     ],
 
     'slack' => [

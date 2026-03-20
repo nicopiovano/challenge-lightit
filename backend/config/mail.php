@@ -79,10 +79,6 @@ return [
             'transport' => 'array',
         ],
 
-        'mailtrap' => [
-            'transport' => 'mailtrap-sdk',
-        ],
-
         'failover' => [
             'transport' => 'failover',
             'mailers' => [
