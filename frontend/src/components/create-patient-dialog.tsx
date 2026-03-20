@@ -1,28 +1,44 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   Box,
-  Button,
-  CircularProgress,
   Dialog,
   DialogActions,
   DialogContent,
   DialogTitle,
-  InputAdornment,
-  TextField,
-  Typography,
 } from "@mui/material";
+import AppButton from "./app-button";
 import type { CreatePatient } from "../types/patient";
 import {
   type FormFields,
-  EMPTY_FORM,
   normalizePhone,
   validatePatientForm,
+  EMPTY_FORM,
 } from "../validations/patientValidations";
+import AppTextInput from "./app-text-input";
+import AppPhoneInput from "./app-phone-input";
+import AppPhotoUploader from "./app-photo-uploader";
+
+type FieldConfig = {
+  key: keyof FormFields;
+  label: string;
+  type?: string;
+  required?: boolean;
+};
+
+const FIELDS: FieldConfig[] = [
+  { key: "name", label: "Nombre", required: true },
+  { key: "last_name", label: "Apellido", required: true },
+  { key: "email", label: "Email", type: "email", required: true },
+];
+
+const styles = {
+  form: { display: "flex", flexDirection: "column", gap: 2, mt: 1 },
+};
 
 type Props = {
   open: boolean;
   onClose: () => void;
-  onCreate: (payload: CreatePatient) => Promise<void>;
+  onCreate: (nvoPaciente: CreatePatient) => Promise<void>;
 };
 
 export default function CreatePatientDialog({
@@ -30,14 +46,10 @@ export default function CreatePatientDialog({
   onClose,
   onCreate,
 }: Props) {
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
-
   const [form, setForm] = useState<FormFields>(EMPTY_FORM);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
-  const [photoPreviewUrl, setPhotoPreviewUrl] = useState<string | null>(null);
-  const [photoLoading, setPhotoLoading] = useState(false);
-
   const [submitting, setSubmitting] = useState(false);
+  // Valido los campos que se han tocado para mostrar los errores
   const [touched, setTouched] = useState<Set<string>>(new Set());
 
   const errors = useMemo(
@@ -53,36 +65,7 @@ export default function CreatePatientDialog({
     setTouched((prev) => new Set(prev).add(field));
   };
 
-  const reset = () => {
-    setForm(EMPTY_FORM);
-    setPhotoFile(null);
-    setTouched(new Set());
-    if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
-  useEffect(() => {
-    if (!open) {
-      reset();
-      setPhotoPreviewUrl(null);
-    }
-  }, [open]);
-
-  useEffect(() => {
-    if (!photoFile) {
-      setPhotoPreviewUrl(null);
-      setPhotoLoading(false);
-      return;
-    }
-
-    const url = URL.createObjectURL(photoFile);
-    setPhotoLoading(true);
-    setPhotoPreviewUrl(url);
-
-    return () => URL.revokeObjectURL(url);
-  }, [photoFile]);
-
-  const handlePickFile = (file: File | null | undefined) => {
-    if (!file) return;
+  const handlePhotoChange = (file: File) => {
     setPhotoFile(file);
     setTouched((prev) => new Set(prev).add("photo"));
   };
@@ -112,152 +95,56 @@ export default function CreatePatientDialog({
   };
 
   return (
-    <Dialog open={open} onClose={onClose} maxWidth="sm" fullWidth>
+    <Dialog
+      open={open}
+      onClose={onClose}
+      disableEscapeKeyDown
+      maxWidth="sm"
+      fullWidth
+    >
       <DialogTitle>Crear paciente</DialogTitle>
       <DialogContent>
-        <Box sx={{ display: "flex", flexDirection: "column", gap: 2, mt: 1 }}>
-          <TextField
-            label="Nombre"
-            value={form.name}
-            onChange={(e) => handleChange("name", e.target.value)}
-            required
-            error={Boolean(visibleErrors.name)}
-            helperText={visibleErrors.name}
-            fullWidth
-          />
-          <TextField
-            label="Apellido"
-            value={form.last_name}
-            onChange={(e) => handleChange("last_name", e.target.value)}
-            required
-            error={Boolean(visibleErrors.last_name)}
-            helperText={visibleErrors.last_name}
-            fullWidth
-          />
-          <TextField
-            label="Email"
-            value={form.email}
-            onChange={(e) => handleChange("email", e.target.value)}
-            required
-            error={Boolean(visibleErrors.email)}
-            helperText={visibleErrors.email}
-            fullWidth
-            type="email"
-          />
-          <Box sx={{ display: "flex", gap: 1, alignItems: "flex-start" }}>
-            <TextField
-              label="Prefijo"
-              value={form.prefix}
-              onChange={(e) =>
-                handleChange(
-                  "prefix",
-                  e.target.value.replace(/\D/g, "").slice(0, 4),
-                )
-              }
-              error={Boolean(visibleErrors.prefix)}
-              helperText={visibleErrors.prefix}
-              inputMode="numeric"
-              sx={{ width: 110 }}
-              slotProps={{
-                input: {
-                  startAdornment: (
-                    <InputAdornment position="start">+</InputAdornment>
-                  ),
-                },
-              }}
+        <Box sx={styles.form}>
+          {FIELDS.map(({ key, label, type, required }) => (
+            <AppTextInput
+              key={key}
+              label={label}
+              type={type}
+              value={form[key]}
+              onChange={(e) => handleChange(key, e.target.value)}
+              required={required}
+              error={visibleErrors[key]}
             />
-            <TextField
-              label="Teléfono"
-              placeholder="11-1111-1111"
-              value={form.phone}
-              onChange={(e) => handleChange("phone", e.target.value)}
-              required
-              error={Boolean(visibleErrors.phone)}
-              helperText={visibleErrors.phone}
-              fullWidth
-              inputMode="tel"
-            />
-          </Box>
+          ))}
 
-          <Box
-            sx={{
-              border: "1px dashed",
-              borderColor: "divider",
-              borderRadius: 2,
-              p: 2,
-              textAlign: "center",
-              cursor: "pointer",
-              backgroundColor: "rgba(255,255,255,0.02)",
-            }}
-            onClick={() => fileInputRef.current?.click()}
-            onDragOver={(e) => {
-              e.preventDefault();
-            }}
-            onDrop={(e) => {
-              e.preventDefault();
-              const file = e.dataTransfer.files?.[0];
-              handlePickFile(file);
-            }}
-            role="button"
-            tabIndex={0}
-          >
-            <Typography variant="body1" fontWeight={600}>
-              Arrastrar y soltar foto
-            </Typography>
-            <Typography variant="body2" color="text.secondary">
-              o click para seleccionar
-            </Typography>
+          <AppPhoneInput
+            prefix={form.prefix}
+            phone={form.phone}
+            onPrefixChange={(v) => handleChange("prefix", v)}
+            onPhoneChange={(v) => handleChange("phone", v)}
+            prefixError={visibleErrors.prefix}
+            phoneError={visibleErrors.phone}
+          />
 
-            {photoPreviewUrl ? (
-              <Box
-                sx={{
-                  mt: 2,
-                  display: "flex",
-                  justifyContent: "center",
-                  alignItems: "center",
-                  minHeight: 160,
-                }}
-              >
-                {photoLoading && <CircularProgress size={40} />}
-                <Box
-                  component="img"
-                  src={photoPreviewUrl}
-                  alt="Vista previa de la foto"
-                  onLoad={() => setPhotoLoading(false)}
-                  sx={{
-                    width: 160,
-                    height: 160,
-                    objectFit: "cover",
-                    borderRadius: 2,
-                    display: photoLoading ? "none" : "block",
-                  }}
-                />
-              </Box>
-            ) : null}
-
-            {visibleErrors.photo ? (
-              <Typography variant="body2" color="error" sx={{ mt: 1 }}>
-                {visibleErrors.photo}
-              </Typography>
-            ) : null}
-          </Box>
-
-          <input
-            ref={fileInputRef}
-            type="file"
-            accept="image/*"
-            style={{ display: "none" }}
-            onChange={(e) => handlePickFile(e.target.files?.[0])}
+          <AppPhotoUploader
+            file={photoFile}
+            onChange={handlePhotoChange}
+            error={visibleErrors.photo}
           />
         </Box>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} disabled={submitting}>
+        <AppButton onClick={onClose} disabled={submitting}>
           Cancelar
-        </Button>
-        <Button variant="contained" onClick={handleSubmit}>
-          {submitting ? "Creando..." : "Crear"}
-        </Button>
+        </AppButton>
+        <AppButton
+          variant="contained"
+          onClick={handleSubmit}
+          loading={submitting}
+          loadingLabel="Creando..."
+        >
+          Crear
+        </AppButton>
       </DialogActions>
     </Dialog>
   );
