@@ -39,6 +39,7 @@ export default function AppPhoneInput({
         required
         error={phoneError}
         inputMode="tel"
+        maxLength={12}
       />
     </div>
   );
