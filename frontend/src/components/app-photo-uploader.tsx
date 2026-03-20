@@ -9,6 +9,7 @@ type Props = {
 export default function AppPhotoUploader({ file, onChange, error }: Props) {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [previewUrl, setPreviewUrl] = useState<string | null>(null);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     if (!file) {
@@ -16,6 +17,7 @@ export default function AppPhotoUploader({ file, onChange, error }: Props) {
       return;
     }
     const url = URL.createObjectURL(file);
+    setLoading(true);
     setPreviewUrl(url);
     return () => URL.revokeObjectURL(url);
   }, [file]);
@@ -43,10 +45,14 @@ export default function AppPhotoUploader({ file, onChange, error }: Props) {
 
       {previewUrl && (
         <div className="mt-3 flex min-h-40 items-center justify-center">
+          {loading && (
+            <div className="h-8 w-8 animate-spin rounded-full border-2 border-zinc-600 border-t-violet-500" />
+          )}
           <img
             src={previewUrl}
             alt="Vista previa"
-            className="h-40 w-40 rounded-lg object-cover"
+            onLoad={() => setLoading(false)}
+            className={`h-40 w-40 rounded-lg object-cover ${loading ? "hidden" : "block"}`}
           />
         </div>
       )}
