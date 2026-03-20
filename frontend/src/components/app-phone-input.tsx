@@ -35,7 +35,9 @@ export default function AppPhoneInput({
         label="Teléfono"
         placeholder="11-1111-1111"
         value={phone}
-        onChange={(e) => onPhoneChange(e.target.value)}
+        onChange={(e) =>
+          onPhoneChange(e.target.value.replace(/[^\d-]/g, ""))
+        }
         required
         error={phoneError}
         inputMode="tel"

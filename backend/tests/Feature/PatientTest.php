@@ -64,7 +64,8 @@ class PatientTest extends TestCase
 
         $this->postJson('/api/patients', $this->validPayload())
             ->assertCreated()
-            ->assertJsonStructure(['message', 'data' => ['id', 'name', 'last_name', 'email', 'phone', 'photo']]);
+            ->assertJsonStructure(['message'])
+            ->assertJsonMissing(['data']);
 
         $this->assertDatabaseHas('patients', ['email' => 'juan@example.com']);
     }

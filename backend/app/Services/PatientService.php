@@ -2,17 +2,17 @@
 
 namespace App\Services;
 
-use App\Mail\WelcomePatientMail;
-use App\Models\Patient;
 use App\Repositories\PatientRepository;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Throwable;
+use App\Services\MailService;
 
 class PatientService
 {
     public function __construct(
         private readonly PatientRepository $patientRepository,
+        private readonly MailService $mailService,
     ) {
     }
 
@@ -21,20 +21,26 @@ class PatientService
         return $this->patientRepository->all();
     }
 
-    public function createPatient(array $data, UploadedFile $photoFile): Patient
+    public function createPatient(array $data, UploadedFile $photoFile): void
     {
         $storedPath = $photoFile->store('patient-photos', 'public');
-        $photoPath = Storage::url($storedPath); // /storage/patient-photos/...
 
-        $patient = $this->patientRepository->create([
-            ...$data,
-            'photo' => $photoPath,
-        ]);
+        try {
+            $patient = $this->patientRepository->create([
+                ...$data,
+                'photo' => Storage::url($storedPath),
+            ]);
+        } catch (Throwable $e) {
+            Storage::disk('public')->delete($storedPath);
+            throw $e;
+        }
 
-        Mail::to($patient->email)->queue(new WelcomePatientMail($patient));
+        $this->mailService->sendWelcomePatientMail(
+            $patient->email,
+            $patient->name,
+            $patient->last_name,
+        );
+
         // SMS::to($patient->phone)->queue(new WelcomePatientSms($patient)); Proximamente.
-
-        return $patient;
     }
 }
-
