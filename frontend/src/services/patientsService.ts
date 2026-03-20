@@ -1,9 +1,9 @@
 import type { CreatePatient, Patient } from '../types/patient'
-import { apiClient } from './apiClient'
-import { endpoints } from './endpoints'
+import { apiClient } from '../api/apiClient'
+import { endpoints } from '../api/endpoints'
 
 export async function listPatients(): Promise<Patient[]> {
-  const json = await apiClient.get<{ data: Patient[] }>(endpoints.patients.list)
+  const json = await apiClient.get(endpoints.patients.list) as { data: Patient[] }
   return json.data ?? []
 }
 

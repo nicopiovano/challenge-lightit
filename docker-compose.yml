@@ -37,6 +37,26 @@ services:
       - ./backend:/var/www/html
       - /var/www/html/vendor
 
+  queue:
+    build: ./backend
+    command: php artisan queue:work --sleep=3 --tries=3
+    depends_on:
+      postgres:
+        condition: service_healthy
+    environment:
+      APP_ENV: local
+      APP_DEBUG: true
+      DB_CONNECTION: pgsql
+      DB_HOST: postgres
+      DB_PORT: 5432
+      DB_DATABASE: lighit
+      DB_USERNAME: lighit
+      DB_PASSWORD: secret
+      FILESYSTEM_DISK: public
+    volumes:
+      - ./backend:/var/www/html
+      - /var/www/html/vendor
+
   frontend:
     build: ./frontend
     depends_on:

@@ -1,5 +1,4 @@
-import { Box, InputAdornment } from "@mui/material";
-import TextFieldApp from "./app-text-input";
+import AppTextInput from "./app-text-input";
 
 type Props = {
   prefix: string;
@@ -8,17 +7,6 @@ type Props = {
   onPhoneChange: (value: string) => void;
   prefixError?: string;
   phoneError?: string;
-};
-
-const styles = {
-  row: { display: "flex", gap: 1, alignItems: "flex-start" },
-  prefix: { width: 110 },
-} as const;
-
-const prefixSlotProps = {
-  input: {
-    startAdornment: <InputAdornment position="start">+</InputAdornment>,
-  },
 };
 
 export default function AppPhoneInput({
@@ -30,8 +18,8 @@ export default function AppPhoneInput({
   phoneError,
 }: Props) {
   return (
-    <Box sx={styles.row}>
-      <TextFieldApp
+    <div className="flex items-start gap-2">
+      <AppTextInput
         label="Prefijo"
         value={prefix}
         onChange={(e) =>
@@ -40,10 +28,10 @@ export default function AppPhoneInput({
         error={prefixError}
         inputMode="numeric"
         fullWidth={false}
-        sx={styles.prefix}
-        slotProps={prefixSlotProps}
+        leftAdornment="+"
+        className="w-28"
       />
-      <TextFieldApp
+      <AppTextInput
         label="Teléfono"
         placeholder="11-1111-1111"
         value={phone}
@@ -51,7 +39,8 @@ export default function AppPhoneInput({
         required
         error={phoneError}
         inputMode="tel"
+        maxLength={12}
       />
-    </Box>
+    </div>
   );
 }

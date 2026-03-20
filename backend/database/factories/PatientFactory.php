@@ -13,17 +13,19 @@ class PatientFactory extends Factory
 {
     public function definition(): array
     {
-        // Usamos fotos que ya están cargadas en `storage/app/public/patient-photos`.
-        $existingPhotos = Storage::disk('public')->files('patient-photos');
-        $seedPhotoRelPath = $existingPhotos[array_rand($existingPhotos)] ?? null;
-        $photoUrl = $seedPhotoRelPath ? Storage::url($seedPhotoRelPath) : '';
+        $seedImage = database_path('seeders/images/patient.png');
+        $filename  = 'patient-photos/seed-patient.png';
+
+        if (!Storage::disk('public')->exists($filename)) {
+            Storage::disk('public')->put($filename, file_get_contents($seedImage));
+        }
 
         return [
-            'name' => 'Nico',
-            'last_name' => 'Piovano',
-            'email' => 'nmpiovano@gmail.com',
-            'phone' => fake()->numerify('+54 9 ### ### ####'),
-            'photo' => $photoUrl,
+            'name'      => 'Cosme',
+            'last_name' => 'Fulanito',
+            'email'     => fake()->unique()->safeEmail(),
+            'phone'     => fake()->numerify('+54911########'),
+            'photo'     => Storage::url($filename),
         ];
     }
 }
