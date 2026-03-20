@@ -20,9 +20,15 @@ type FieldConfig = {
 };
 
 const FIELDS: FieldConfig[] = [
-  { key: "name",      label: "Nombre",   required: true, maxLength: 15 },
+  { key: "name", label: "Nombre", required: true, maxLength: 15 },
   { key: "last_name", label: "Apellido", required: true, maxLength: 30 },
-  { key: "email",     label: "Email",    type: "email",  required: true, maxLength: 25 },
+  {
+    key: "email",
+    label: "Email",
+    type: "email",
+    required: true,
+    maxLength: 25,
+  },
 ];
 
 type Props = {
@@ -31,7 +37,11 @@ type Props = {
   onCreate: (payload: CreatePatient) => Promise<void>;
 };
 
-export default function CreatePatientDialog({ open, onClose, onCreate }: Props) {
+export default function CreatePatientDialog({
+  open,
+  onClose,
+  onCreate,
+}: Props) {
   const [form, setForm] = useState<FormFields>(EMPTY_FORM);
   const [photoFile, setPhotoFile] = useState<File | null>(null);
   const [submitting, setSubmitting] = useState(false);
@@ -88,9 +98,8 @@ export default function CreatePatientDialog({ open, onClose, onCreate }: Props) 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/60 backdrop-blur-sm" />
         <Dialog.Content
-          className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-xl"
+          className="fixed left-1/2 top-1/2 z-50 w-full max-w-md -translate-x-1/2 -translate-y-1/2 overflow-y-auto max-h-[90vh] rounded-xl border border-zinc-800 bg-zinc-950 p-6 shadow-xl"
           onInteractOutside={(e) => e.preventDefault()}
-          onEscapeKeyDown={(e) => e.preventDefault()}
         >
           <Dialog.Title className="mb-4 text-lg font-semibold text-zinc-100">
             Crear paciente
