@@ -21,7 +21,7 @@ type FieldConfig = {
 
 const FIELDS: FieldConfig[] = [
   { key: "name",      label: "Nombre",   required: true, maxLength: 15 },
-  { key: "last_name", label: "Apellido", required: true, maxLength: 15 },
+  { key: "last_name", label: "Apellido", required: true, maxLength: 30 },
   { key: "email",     label: "Email",    type: "email",  required: true, maxLength: 25 },
 ];
 

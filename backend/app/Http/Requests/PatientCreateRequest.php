@@ -15,7 +15,7 @@ class PatientCreateRequest extends FormRequest
     {
         return [
             'name'      => ['required', 'string', 'min:3',  'max:15'],
-            'last_name' => ['required', 'string', 'min:2',  'max:15'],
+            'last_name' => ['required', 'string', 'min:2',  'max:30'],
             'email'     => ['required', 'email',  'min:5',  'max:25', 'unique:patients,email'],
             'phone'     => ['required', 'string', 'regex:/^\+\d{2,4}\d{6,12}$/'],
             'photo'     => ['required', 'file',   'mimes:jpg,jpeg,png,webp,gif,svg', 'max:2048'],

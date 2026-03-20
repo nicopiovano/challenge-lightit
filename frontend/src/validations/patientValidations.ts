@@ -37,7 +37,7 @@ const validPrefix = (v: string): string | null =>
 
 const fieldRules: Record<keyof FormFields, FieldValidator[]> = {
   name:      [required, noNumbers, minMax(3, 15)],
-  last_name: [required, noNumbers, minMax(2, 15)],
+  last_name: [required, noNumbers, minMax(2, 30)],
   email:     [required, minMax(5, 25), validEmail],
   phone:     [required, validPhone],
   prefix:    [required, validPrefix],
