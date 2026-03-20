@@ -6,9 +6,9 @@ import {
   normalizePhone,
   validatePatientForm,
 } from "../validations/patientValidations";
-import AppTextField from "./form-text-field";
-import PhoneInput from "./phone-input";
-import PhotoDropzone from "./photo-dropzone";
+import AppTextInput from "./app-text-input";
+import AppPhoneInput from "./app-phone-input";
+import AppPhotoUploader from "./app-photo-uploader";
 import AppButton from "./app-button";
 
 type FieldConfig = {
@@ -94,7 +94,7 @@ export default function CreatePatientDialog({ open, onClose, onCreate }: Props) 
 
           <div className="flex flex-col gap-4">
             {FIELDS.map(({ key, label, type, required }) => (
-              <AppTextField
+              <AppTextInput
                 key={key}
                 label={label}
                 type={type}
@@ -105,7 +105,7 @@ export default function CreatePatientDialog({ open, onClose, onCreate }: Props) 
               />
             ))}
 
-            <PhoneInput
+            <AppPhoneInput
               prefix={form.prefix}
               phone={form.phone}
               onPrefixChange={(v) => handleChange("prefix", v)}
@@ -114,7 +114,7 @@ export default function CreatePatientDialog({ open, onClose, onCreate }: Props) 
               phoneError={visibleErrors.phone}
             />
 
-            <PhotoDropzone
+            <AppPhotoUploader
               file={photoFile}
               onChange={handlePhotoChange}
               error={visibleErrors.photo}

@@ -1,4 +1,4 @@
-import AppTextField from "./form-text-field";
+import AppTextInput from "./app-text-input";
 
 type Props = {
   prefix: string;
@@ -9,7 +9,7 @@ type Props = {
   phoneError?: string;
 };
 
-export default function PhoneInput({
+export default function AppPhoneInput({
   prefix,
   phone,
   onPrefixChange,
@@ -18,8 +18,8 @@ export default function PhoneInput({
   phoneError,
 }: Props) {
   return (
-    <div className="flex gap-2 items-start">
-      <AppTextField
+    <div className="flex items-start gap-2">
+      <AppTextInput
         label="Prefijo"
         value={prefix}
         onChange={(e) =>
@@ -31,9 +31,9 @@ export default function PhoneInput({
         leftAdornment="+"
         className="w-28"
       />
-      <AppTextField
+      <AppTextInput
         label="Teléfono"
-        placeholder="11-1234-5678"
+        placeholder="11-1111-1111"
         value={phone}
         onChange={(e) => onPhoneChange(e.target.value)}
         required
