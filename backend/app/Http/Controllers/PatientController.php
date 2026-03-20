@@ -25,14 +25,13 @@ class PatientController extends Controller
 
     public function store(PatientCreateRequest $request): JsonResponse
     {
-        $patient = $this->patientService->createPatient(
+        $this->patientService->createPatient(
             $request->safe()->except('photo'),
             $request->file('photo'),
         );
 
         return response()->json([
             'message' => 'Paciente creado correctamente.',
-            'data' => (new PatientResource($patient))->resolve(),
         ], 201);
     }
 }
